@@ -58,7 +58,12 @@ class StudentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        return "update";
+        $info = Student::find($id)->update($request->all());
+        if ($info) {
+            return array(["success" => "Updated Successfully."]);
+        } else {
+            return array(["failure" => "Something went wrong."]);
+        }
     }
 
     /**
