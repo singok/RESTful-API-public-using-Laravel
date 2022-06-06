@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Student;
 use Illuminate\Http\Request;
 
 class StudentController extends Controller
@@ -13,17 +14,7 @@ class StudentController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return Student::all();
     }
 
     /**
@@ -34,7 +25,17 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'fname' => 'required',
+            'mname' => 'nullable',
+            'lname' => 'required',
+            'gender' => 'required',
+            'email' => 'required | email | unique:student',
+            'phone' => 'required | max:10',
+            'address' => 'required',
+            'grade' => 'required'
+        ]);
+        return Student::create($request->all());
     }
 
     /**
@@ -45,18 +46,7 @@ class StudentController extends Controller
      */
     public function show($id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return Student::find($id);
     }
 
     /**
@@ -68,7 +58,7 @@ class StudentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        return "update";
     }
 
     /**
@@ -79,6 +69,11 @@ class StudentController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $info = Student::find($id)->delete();
+        if ($info) {
+            return array(['success' => 'Deleted Successfully.']);
+        } else {
+            return array(['error' => 'Something went wrong.']);
+        }
     }
 }
