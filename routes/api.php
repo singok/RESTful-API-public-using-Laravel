@@ -3,22 +3,26 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\LoginController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-/*------index------*/
-Route::get('students', [StudentController::class, 'index']);
+/*---------------------------------Students-----------------------------*/
+Route::controller(StudentController::class)->group(function () {
+    Route::get('students', 'index');            // show all records
+    Route::post('students', 'store');           // insert record
+    Route::get('students/{id}', 'show');        // show specific record 
+    Route::delete('students/{id}', 'destroy');  // remove record
+    Route::put('students/{id}', 'update');      // updated record
+});
+/*------------------------------------End--------------------------------*/
 
-/*------store------*/
-Route::post('students', [StudentController::class, 'store']);
-
-/*------show-------*/
-Route::get('students/{id}', [StudentController::class, 'show']);
-
-/*------delete-------*/
-Route::delete('students/{id}', [StudentController::class, 'destroy']);
-
-/*------update-------*/
-Route::put('students/{id}', [StudentController::class, 'update']);
+/*---------------------Sign up and Login------------------------*/
+Route::controller(LoginController::class)->group(function () {
+    Route::post('signup', 'store');     // register user
+    Route::post('signin', 'login');     // signin user
+    Route::get('users', 'index');       // show all users
+    Route::put('users/{id}', 'update');      // update password
+});
